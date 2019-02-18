@@ -8,8 +8,8 @@
 
 2. [实战演练](http://blog.csdn.net/trigl/article/details/70237981#t1)
 
-3. 1. [1 安装Kafka](http://blog.csdn.net/trigl/article/details/70237981#t2)
-   2. [2 安装Flume](http://blog.csdn.net/trigl/article/details/70237981#t3)
+3. 1. 1 安装Kafka
+   2. 2 安装Flume
    3. [3 SparkStreaming编程](http://blog.csdn.net/trigl/article/details/70237981#t4)
 
 
