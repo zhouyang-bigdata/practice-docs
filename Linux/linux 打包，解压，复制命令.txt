@@ -1,0 +1,153 @@
+﻿CP命令
+格式: CP [选项]  源文件或目录   目的文件或目录
+选项说明:-b 同名,备分原来的文件
+        -f 强制覆盖同名文件
+        -r  按递归方式保留原目录结构复制文件
+
+cp     -r         /tmp/a              /root/a
+记得有空格
+
+
+
+===============================================
+linux 怎么样复制文件夹内所有文件到另一个文件夹？
+
+cp -Rf /home/user1/* /root/temp/
+将 /home/user1目录下的所有东西拷到/root/temp/下而不拷贝user1目录本身。
+即格式为：cp -Rf 原路径/ 目的路径/
+
+sudo cp -Rf /data/new20150130 ./wudaoguan
+
+
+
+
+
+
+mv abc /home/wy/Desktop/
+将当前目录下的abc文件夹移动到/home/wy/Desktop/ 目录下
+
+
+
+
+===============================================
+
+01-.tar格式
+解包：[＊＊＊＊＊＊＊]$ tar xvf FileName.tar
+打包：[＊＊＊＊＊＊＊]$ tar cvf FileName.tar DirName（注：tar是打包，不是压缩！）
+
+02-.gz格式
+解压1：[＊＊＊＊＊＊＊]$ gunzip FileName.gz
+解压2：[＊＊＊＊＊＊＊]$ gzip -d FileName.gz
+压 缩：[＊＊＊＊＊＊＊]$ gzip FileName
+
+03-.tar.gz格式
+解压：[＊＊＊＊＊＊＊]$ tar zxvf FileName.tar.gz
+压缩：[＊＊＊＊＊＊＊]$ tar zcvf FileName.tar.gz DirName
+
+04-.bz2格式
+解压1：[＊＊＊＊＊＊＊]$ bzip2 -d FileName.bz2
+解压2：[＊＊＊＊＊＊＊]$ bunzip2 FileName.bz2
+压 缩： [＊＊＊＊＊＊＊]$ bzip2 -z FileName
+
+05-.tar.bz2格式
+解压：[＊＊＊＊＊＊＊]$ tar jxvf FileName.tar.bz2
+压缩：[＊＊＊＊＊＊＊]$ tar jcvf FileName.tar.bz2 DirName
+
+06-.bz格式
+解压1：[＊＊＊＊＊＊＊]$ bzip2 -d FileName.bz
+解压2：[＊＊＊＊＊＊＊]$ bunzip2 FileName.bz
+
+07-.tar.bz格式
+解压：[＊＊＊＊＊＊＊]$ tar jxvf FileName.tar.bz
+
+08-.Z格式
+解压：[＊＊＊＊＊＊＊]$ uncompress FileName.Z
+压缩：[＊＊＊＊＊＊＊]$ compress FileName
+
+09-.tar.Z格式
+解压：[＊＊＊＊＊＊＊]$ tar Zxvf FileName.tar.Z
+压缩：[＊＊＊＊＊＊＊]$ tar Zcvf FileName.tar.Z DirName
+
+10-.tgz格式
+解压：[＊＊＊＊＊＊＊]$ tar zxvf FileName.tgz
+
+11-.tar.tgz格式
+解压：[＊＊＊＊＊＊＊]$ tar zxvf FileName.tar.tgz
+压缩：[＊＊＊＊＊＊＊]$ tar zcvf FileName.tar.tgz FileName
+
+12-.zip格式
+解压：[＊＊＊＊＊＊＊]$ unzip FileName.zip
+压缩：[＊＊＊＊＊＊＊]$ zip -r FileName.zip DirName
+
+13-.lha格式
+解压：[＊＊＊＊＊＊＊]$ lha -e FileName.lha
+压缩：[＊＊＊＊＊＊＊]$ lha -a FileName.lha FileName
+
+14-.rar格式
+解压：[＊＊＊＊＊＊＊]$ rar a FileName.rar
+压缩：[＊＊＊＊＊＊＊]$ rar e FileName.rar     
+rar请到：http://www.rarsoft.com/download.htm 下载！
+解压后请将rar_static拷贝到/usr/bin目录（其他由$PATH环境变量
+指定的目录也行）：[＊＊＊＊＊＊＊]$ cp rar_static /usr/bin/rar
+
+来自：http://hi.baidu.com/ucdcmqj/blog/item/c48fab59b2c1322c2934f0fd.html
+
+
+
+
+参看各文件夹大小：
+du -h --max-depth=1
+1> 要显示一个目录树及其每个子树的磁盘使用情况
+du /home/linux
+这在/home/linux目录及其每个子目录中显示了磁盘块数。
+
+2> 要通过以1024字节为单位显示一个目录树及其每个子树的磁盘使用情况
+du -k /home/linux
+这在/home/linux目录及其每个子目录中显示了 1024 字节磁盘块数。
+
+3> 以MB为单位显示一个目录树及其每个子树的磁盘使用情况
+du -m /home/linux
+这在/home/linux目录及其每个子目录中显示了 MB 磁盘块数。
+
+4> 以GB为单位显示一个目录树及其每个子树的磁盘使用情况
+du -g /home/linux
+
+
+
+#删除文件夹下文件，不删除文件夹。此处需要写该文件夹完整的绝对路径
+2
+rm -rf /Runtime/*
+3
+#如果权限不足，需要在rm前面加上sudo来执行
+
+
+cd /usr/hadoop-2.7.3
+cd ./hdfs                 #进入子目录
+cd ..                     #退出到父目录，也就是/usr/hadoop-2.7.3
+
+
+#netstat
+netstat -at
+netstat -tpnl
+netstat -tup
+netstat -tcp
+
+
+赋予root权限
+
+方法一：修改 /etc/sudoers 文件，找到下面一行，把前面的注释（#）去掉
+
+## Allows people in group wheel to run all commands
+%wheel    ALL=(ALL)    ALL
+
+然后修改用户，使其属于root组（wheel），命令如下：
+
+#usermod -g root tommy
+
+方法二：修改 /etc/sudoers 文件，找到下面一行，在root下面添加一行，如下所示：
+
+## Allow root to run any commands anywhere
+root    ALL=(ALL)     ALL
+tommy   ALL=(ALL)     ALL
+
+修改完毕，现在可以用tommy帐号登录，然后用命令 sudo – ，即可获得root权限进行操作。
