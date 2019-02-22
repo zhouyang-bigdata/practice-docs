@@ -1,0 +1,2 @@
+hadoop 2.6.4 tar
+http://archive.apache.org/dist/hadoop/core/hadoop-2.6.4/
