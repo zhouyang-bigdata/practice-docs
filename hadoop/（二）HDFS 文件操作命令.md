@@ -35,3 +35,9 @@ hadoop fs -du - h < hdsf path>  显示hdfs对应路径下每个文件夹和文�
 hdfs dfsadmin -report：显示所有dataNode
 
 hdfs dfsadmin -safemode leave：离开安全模式
+
+
+
+临时用户
+
+ export HADOOP_USER_NAME=node1
