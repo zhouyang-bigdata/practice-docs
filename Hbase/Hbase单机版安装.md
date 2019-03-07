@@ -1,0 +1,141 @@
+下载
+
+
+JDK下载：
+
+ 
+
+Hadoop下载：
+
+http://mirrors.advancedhosters.com/apache/hadoop/common/hadoop-2.6.4/
+
+ 
+
+Hbase下载：
+
+http://apache.claz.org/hbase/1.2.6/
+
+
+
+
+
+相关配置
+
+**一、JDK配置(如已经配了，可不用)**
+
+解压：
+
+[root@centos0 java]# tar zxvfjdk-7u10-linux-i586.tar.gz
+
+配置环境变量：
+
+[root@centos0 java]# vi /etc/profile
+
+在文件末尾新增如下环境变量：
+
+export JAVA_HOME=/usr/software/java/jdk1.7.0_10
+export PATH=$JAVA_HOME/bin:$PATH
+exportCLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+[root@centos0 java]# java –version
+
+java version "1.7.0_10"
+
+Java(TM) SE Runtime Environment (build1.7.0_10-b18)
+
+Java HotSpot(TM) Client VM (build 23.6-b04,mixed mode)
+
+
+
+**二、Hbase配置**
+
+1、解压
+[root@centos0 bigdata]# tar -zxvf hbase-1.2.6-bin.tar.gz
+[root@centos0 bigdata]# mv hbase-1.2.6 hbase 
+
+2、配置hbase-env.sh
+[root@centos0 bigdata]# cd /usr/software/bigdata/hbase/conf
+[root@centos0 conf]# vi hbase-env.sh
+编辑JAVA_HOME环境变量，改变路径到当前JAVA_HOME变量：
+
+export JAVA_HOME=/usr/software/java/jdk1.7.0_10
+export HBASE_MANAGES_ZK=true
+
+
+
+说明：
+Hbase依赖于zookeeper，所有的节点和客户端都必须能够访问zookeeper。
+**HBase的安装包里面有自带的ZooKeeper，HBASE_MANAGES_ZK环境变量用来设置是使用HBase默认自带的 Zookeeper还是使用独立的ZooKeeper。**
+**•	HBASE_MANAGES_ZK为 false 时使用独立的.**
+**•	HBASE_MANAGES_ZK为 true 时表示使用默认自带的，让Hbase启动的时候同时也启动自带的ZooKeeper。**
+
+**3、配置hbase-site.xml**
+这是HBase的主配置文件。在hbase-site.xml文件里面，找到 <configuration> 和 </configuration> 标签。并在其中，设置属性键名为“hbase.rootdir”。 设置数据保存的目录：
+
+```xml
+<configuration>
+	<property>
+		 <name>hbase.rootdir</name>
+		<value>file:/home/taima/software-package/hbase-data</value>
+        </property>
+	<property>
+    		<name>hbase.cluster.distributed</name>
+    		<value>true</value>
+  	</property>
+	<property>
+                <name>hbase.master</name>
+                <value>192.168.134.10:16000</value>
+        </property>
+	<property>
+        	<name>hbase.zookeeper.property.dataDir</name>
+          	<value>/home/taima/software-package/zookeeper-data</value>                                                                                    
+  	</property>
+	<property>
+		<name>zookeeper.znode.parent</name>
+		<value>/hbase</value>
+	</property>
+	<property>
+                <name>hbase.zookeeper.quorum</name>
+                <value>node1.myexample.com</value>
+        </property>
+</configuration>
+
+
+```
+
+**4、配置Hbase环境变量**
+[root@centos0 ~]#  vi /etc/profile
+新增以下配置：
+export HBASE_HOME=/usr/software/bigdata/hbase  
+export HBASE_CONF_DIR=$HBASE_HOME/conf  
+export HBASE_CLASS_PATH=$HBASE_CONF_DIR  
+export PATH=$PATH:$HBASE_HOME/bin
+
+到此 HBase 的安装配置已成功完成。可以通过使用 HBase 的 bin 文件夹中提供 start-hbase.sh 脚本启动 HBase。
+[root@centos0 ~]# cd /usr/software/bigdata/hbase/bin
+[root@centos0 bin]# ./start-hbase.sh
+starting master, logging to /usr/software/bigdata/hbase/logs/hbase-root-master-centos0.out
+
+启动成功后，可以通过命令查看当前的Hbase版本 
+[root@centos0 ~]# hbase version
+HBase 1.2.6
+Source code repository file:///home/busbey/projects/hbase/hbase-assembly/target/hbase-1.2.6 revision=Unknown
+Compiled by busbey on Mon May 29 02:25:32 CDT 2017
+From source with checksum 7e8ce83a648e252758e9dae1fbe779c9
+
+查看正在运行的
+[root@centos0 bin]# jps
+1730 Jps
+1335 HMaster
+HMaster  (由于是单机模式，所以只有HMaster在运行)
+
+可以输入命令进入Hbase, 使用 "hbase shell" 命令可以连接到正在运行的 HBase 实例.
+[root@centos0 ~]#  hbase shell
+hbase(main):001:0>
+
+至此单机版Hbase配置完成，浏览器访问http://ipxxxxxxxxx:16010
+Hbase单机版默认版本是16010 ，可以看到Hbase视图界面
+--------------------- 
+作者：漫天雪_昆仑巅 
+来源：CSDN 
+原文：https://blog.csdn.net/vtopqx/article/details/78448787 
+版权声明：本文为博主原创文章，转载请附上博文链接！
