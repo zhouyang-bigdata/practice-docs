@@ -133,6 +133,51 @@ HMaster  (由于是单机模式，所以只有HMaster在运行)
 hbase(main):001:0>
 
 至此单机版Hbase配置完成，浏览器访问http://ipxxxxxxxxx:16010
+
+
+
+#### **hbase-site.xml** **配置参数解析**
+
+- **hbase.rootdir**
+
+这个目录是 RegionServer 的共享目录，用来持久化 HBase。特别注意的是 hbase.rootdir 里面的 HDFS 地址是要跟 Hadoop 的 core-site.xml 里面的 fs.defaultFS 的 HDFS 的 IP 地址或者域名、端口必须一致。（HA环境下，dfs.nameservices  是由zookeeper来决定的）
+
+- **hbase.cluster.distributed**
+
+HBase 的运行模式。为 false 表示单机模式，为 true 表示分布式模式。若为 false，HBase 和 ZooKeeper 会运行在同一个 JVM 中
+
+- **hbase.master**
+
+如果只设置单个 Hmaster，那么 hbase.master 属性参数需要设置为 master:60000 (主机名:60000)
+
+如果要设置多个 Hmaster，那么我们只需要提供端口 60000，因为选择真正的 master 的事情会有 zookeeper 去处理
+
+- **hbase.tmp.dir**
+
+本地文件系统的临时文件夹。可以修改到一个更为持久的目录上。(/tmp会在重启时清除)
+
+- **hbase.zookeeper.quorum**
+
+对于 ZooKeeper 的配置。至少要在 hbase.zookeeper.quorum 参数中列出全部的 ZooKeeper 的主机，用逗号隔开。该属性值的默认值为 localhost，这个值显然不能用于分布式应用中。
+
+- **hbase.zookeeper.property.dataDir**
+
+这个参数用户设置 ZooKeeper 快照的存储位置，默认值为 /tmp，显然在重启的时候会清空。因为笔者的 ZooKeeper 是独立安装的，所以这里路径是指向了 $ZOOKEEPER_HOME/conf/zoo.cfg 中 dataDir 所设定的位置。
+
+- **hbase.zookeeper.property.clientPort**
+
+表示客户端连接 ZooKeeper 的端口。
+
+- **zookeeper.session.timeout**
+
+ZooKeeper 会话超时。Hbase 把这个值传递改 zk 集群，向它推荐一个会话的最大超时时间
+
+- **hbase.regionserver.restart.on.zk.expire**
+
+当 regionserver 遇到 ZooKeeper session expired ， regionserver 将选择 restart 而不是 abort。
+
+
+
 Hbase单机版默认版本是16010 ，可以看到Hbase视图界面
 --------------------- 
 作者：漫天雪_昆仑巅 
