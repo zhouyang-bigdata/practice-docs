@@ -2,7 +2,21 @@
 
 注意：hdfs dfs 与 hadoop fs 效果一样
 
-常用的就是
+常用的就是：
+
+启动hadoop
+
+./sbin/start-dfs.sh
+
+./sbin/start-yarn.sh
+
+或：
+
+./sbin/start-all.sh
+
+
+
+
 
 hdfs dfs -copyFromLocal /local/data /hdfs/data：将本地文件上传到 hdfs  上（原路径只能是一个文件）
 
