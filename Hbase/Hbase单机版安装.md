@@ -31,18 +31,19 @@ http://apache.claz.org/hbase/1.2.6/
 
 [root@centos0 java]# vi /etc/profile
 
-在文件末尾新增如下环境变量：
+ \# set environment value
+export JAVA_HOME=/usr/java/jdk1.8
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export HADOOP_HOME=/home/taima/software-package/hadoop-2.6.4
+export SPARK_HOME=/home/taima/software-package/spark-1.6.0-bin-hadoop2.6
+export HBASE_HOME=/home/taima/software-package/hbase-1.2.6
+export HBASE_CONF_DIR=$HBASE_HOME/conf
+export HBASE_CLASS_PATH=$HBASE_CONF_DIR
 
-export JAVA_HOME=/usr/software/java/jdk1.7.0_10
-export PATH=$JAVA_HOME/bin:$PATH
-exportCLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-[root@centos0 java]# java –version
+\#path
+export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$SPARK_HOME/bin:$HBASE_HOME/bin:$PATH
 
-java version "1.7.0_10"
 
-Java(TM) SE Runtime Environment (build1.7.0_10-b18)
-
-Java HotSpot(TM) Client VM (build 23.6-b04,mixed mode)
 
 
 
@@ -57,7 +58,7 @@ Java HotSpot(TM) Client VM (build 23.6-b04,mixed mode)
 [root@centos0 conf]# vi hbase-env.sh
 编辑JAVA_HOME环境变量，改变路径到当前JAVA_HOME变量：
 
-export JAVA_HOME=/usr/software/java/jdk1.7.0_10
+export JAVA_HOME=/usr/software/java/jdk1.8
 export HBASE_MANAGES_ZK=true
 
 
@@ -71,11 +72,15 @@ Hbase依赖于zookeeper，所有的节点和客户端都必须能够访问zookee
 **3、配置hbase-site.xml**
 这是HBase的主配置文件。在hbase-site.xml文件里面，找到 <configuration> 和 </configuration> 标签。并在其中，设置属性键名为“hbase.rootdir”。 设置数据保存的目录：
 
+**<font color="red">node1为本机域名，分别在/etc/hosts 和/etc/sysconfig/network 中配置</font>。**
+
+
+
 ```xml
 <configuration>
 	<property>
 		 <name>hbase.rootdir</name>
-		<value>file:/home/taima/software-package/hbase-data</value>
+		<value>hdfs://node1:8020/hbase</value>
         </property>
 	<property>
     		<name>hbase.cluster.distributed</name>
@@ -83,8 +88,13 @@ Hbase依赖于zookeeper，所有的节点和客户端都必须能够访问zookee
   	</property>
 	<property>
                 <name>hbase.master</name>
-                <value>192.168.134.10:16000</value>
+                <value>16000</value>
         </property>
+	<property>
+                <name>hbase.regionserver.port</name>
+                <value>16020</value>
+        </property>
+
 	<property>
         	<name>hbase.zookeeper.property.dataDir</name>
           	<value>/home/taima/software-package/zookeeper-data</value>                                                                                    
@@ -95,22 +105,27 @@ Hbase依赖于zookeeper，所有的节点和客户端都必须能够访问zookee
 	</property>
 	<property>
                 <name>hbase.zookeeper.quorum</name>
-                <value>node1.myexample.com</value>
+                <value>node1</value>
+        </property>
+        <property>
+                <name>hbase.client.retries.number</name>
+                <value>35</value>
+        </property>
+        <property>
+                <name>hbase.master.hostname</name>
+                <value>node1</value>
+        </property>
+        <property>
+                <name>hbase.regionserver.hostname</name>
+                <value>node1</value>
         </property>
 </configuration>
-
-
 ```
 
-**4、配置Hbase环境变量**
-[root@centos0 ~]#  vi /etc/profile
-新增以下配置：
-export HBASE_HOME=/usr/software/bigdata/hbase  
-export HBASE_CONF_DIR=$HBASE_HOME/conf  
-export HBASE_CLASS_PATH=$HBASE_CONF_DIR  
-export PATH=$PATH:$HBASE_HOME/bin
+**4、启动hbase（先启动zookeeper，再启动hbase）**
 
-到此 HBase 的安装配置已成功完成。可以通过使用 HBase 的 bin 文件夹中提供 start-hbase.sh 脚本启动 HBase。
+**去hbase路径下面**
+
 [root@centos0 ~]# cd /usr/software/bigdata/hbase/bin
 [root@centos0 bin]# ./start-hbase.sh
 starting master, logging to /usr/software/bigdata/hbase/logs/hbase-root-master-centos0.out
@@ -136,6 +151,25 @@ hbase(main):001:0>
 
 
 
+**5，zookeeper配置**
+
+配置conf/zoo.cfg文件：
+
+```
+clientPort=2181
+server.1=node1:2888:3888
+```
+
+并也拷贝一份zoo.cfg到hbase/conf 路径下面.
+
+
+
+
+
+
+
+
+
 #### **hbase-site.xml** **配置参数解析**
 
 - **hbase.rootdir**
@@ -148,9 +182,9 @@ HBase 的运行模式。为 false 表示单机模式，为 true 表示分布式�
 
 - **hbase.master**
 
-如果只设置单个 Hmaster，那么 hbase.master 属性参数需要设置为 master:60000 (主机名:60000)
+如果只设置单个 Hmaster，那么 hbase.master 属性参数需要设置为 master:16000 (主机名:16000)
 
-如果要设置多个 Hmaster，那么我们只需要提供端口 60000，因为选择真正的 master 的事情会有 zookeeper 去处理
+如果要设置多个 Hmaster，那么我们只需要提供端口 16000，因为选择真正的 master 的事情会有 zookeeper 去处理
 
 - **hbase.tmp.dir**
 
@@ -180,7 +214,3 @@ ZooKeeper 会话超时。Hbase 把这个值传递改 zk 集群，向它推荐一
 
 Hbase单机版默认版本是16010 ，可以看到Hbase视图界面
 --------------------- 
-作者：漫天雪_昆仑巅 
-来源：CSDN 
-原文：https://blog.csdn.net/vtopqx/article/details/78448787 
-版权声明：本文为博主原创文章，转载请附上博文链接！
