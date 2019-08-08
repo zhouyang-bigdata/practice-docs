@@ -1,51 +1,97 @@
-## **下载安装Hadoop**
+## **Hadoop2.7.2之集群搭建（单机）**
+
+#### <font color="red">cloudera5.13适配的是2.6.4(以上)</font>。
 
 1、下载地址
 
 ```
-http://hadoop.apache.org/releases.html1
-1
+http://hadoop.apache.org/releases.html
+
 ```
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519112332287)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519112332287)
+
+
 
 我下载的是2.7.2，官网在2.5之后默认提供的就是64位的，这里直接下载下来用即可
 
 2、安装[Hadoop](http://lib.csdn.net/base/hadoop)
 
 ```
-tar -zxvf hadoop-2.7.2.tar.gz -C /opt/soft1
-1
+tar -zxvf hadoop-2.7.2.tar.gz -C /opt/soft
+
 ```
 
-3、查看Hadoop是32 or 64 位 
+3、查看Hadoop是32 or 64 位
  参考：<http://www.aboutyun.com/thread-12796-1-1.html>
 
 ```
 cd /opt/soft/hadoop-2.7.2/lib/native
 file libhadoop.so.1.0.012
-12
+
 ```
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519111342189)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519111342189)
 
 4、配置/etc/hosts
 
+#### <font color="red">node1.myexample.com为本机的域名</font>
+
+
+
 ```
-vi /etc/hosts1
-1
+vi /etc/hosts
+
 ```
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160526210846523)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160526210846523)
 
-## **配置启动Hadoop**
+
+
+```shell
+vi /etc/sysconfig/network
+
+
+```
+
+修改hostname为本机域名。
+
+
+
+### 配置环境变量
+
+```shell
+vi /etc/profile
+```
+
+
+
+ \# set environment value
+export JAVA_HOME=/usr/java/jdk1.8
+export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export HADOOP_HOME=/home/taima/software-package/hadoop-2.6.4
+export SPARK_HOME=/home/taima/software-package/spark-1.6.0-bin-hadoop2.6
+export HBASE_HOME=/home/taima/software-package/hbase-1.2.6
+export HBASE_CONF_DIR=$HBASE_HOME/conf
+export HBASE_CLASS_PATH=$HBASE_CONF_DIR
+
+\#path
+export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$SPARK_HOME/bin:$HBASE_HOME/bin:$PATH
+
+
+
+
+
+
+
+## 配置启动Hadoop**
 
 1、修改hadoop2.7.2/etc/hadoop/hadoop-env.sh指定JAVA_HOME
 
 ```
 # The java implementation to use.
-export JAVA_HOME=/opt/soft/jdk1.8.0_9112
-12
+export JAVA_HOME=/opt/soft/jdk1.8.0_91
+
 ```
 
 2、修改hdfs的配置文件
@@ -63,8 +109,7 @@ export JAVA_HOME=/opt/soft/jdk1.8.0_9112
         		<value>file:/home/taima/software-package/hadoop-2.6.4/dfs</value>
                 <description>Abase for other temporary directories.</description>
         </property>
-</configuration>123456789101112
-123456789101112
+</configuration>
 ```
 
 这里fs.defaultFS的value最好是写本机的静态IP当然写本机主机名，再配置hosts是最好的，如果用localhost，然后在windows用java操作hdfs的时候，会连接不上主机。
@@ -95,7 +140,7 @@ export JAVA_HOME=/opt/soft/jdk1.8.0_9112
                <property>
                		<!-- 默认10-->
                		<name>dfs.namenode.handler.count</name>
-               		<value>30</value>	
+               		<value>30</value>
 	       </property>
 	       <property>
 	               <name>dfs.client.block.write.replace-datanode-on-failure.enable</name>        
@@ -108,7 +153,7 @@ export JAVA_HOME=/opt/soft/jdk1.8.0_9112
 	       <property>
 	                               <!-- 默认10-->
                         <name>dfs.datanode.handler.count</name>
-                        <value>30</value>       
+                        <value>30</value>
                </property>
 </configuration>
 ```
@@ -122,7 +167,7 @@ ssh localhost
 
 ```
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519114111356)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519114111356)
 
 会出现如上效果，要求我输入本机登录密码
 
@@ -136,14 +181,14 @@ chmod 0600 ~/.ssh/authorized_keys
 
 配置后，不用密码可以直接登录了
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519114242920)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519114242920)
 
 4、hdfs启动与停止
 
 第一次启动得先格式化（最好不要复制）：
 
 ```
-./bin/hdfs namenode –format
+./bin/hdfs namenode -format
 ```
 
 启动hdfs
@@ -154,19 +199,21 @@ chmod 0600 ~/.ssh/authorized_keys
 
 看到如下效果表示成功：
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519124508945)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519124508945)
 
-[测试](http://lib.csdn.net/base/softwaretest)用浏览器访问：（如果没响应，则开发50070端口）
+[测试](http://lib.csdn.net/base/softwaretest)用浏览器访问50070：（如果没响应，则在防火墙白名单中加入50070端口）
 
-```
+```shell
 firewall-cmd --zone=public --add-port=50070/tcp --permanent
 firewall-cmd --reload
 
-http://192.168.2.100:50070/
+
 ```
 
-效果如下： 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519124621133)
+http://192.168.2.100:50070/
+
+效果如下：
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519124621133)
 
 停止hdfs
 
@@ -174,8 +221,8 @@ http://192.168.2.100:50070/
 sbin/stop-dfs.sh
 ```
 
-5、常用操作： 
-HDFS shell 
+5、常用操作：
+HDFS shell
 查看帮助
 
 ```
@@ -206,7 +253,7 @@ hadoop fs -ls /
 hadoop fs -get <hdfs上的路径>  <linux上文件>
 ```
 
-**上传文件测试** 
+**上传文件测试**
  创建一个words.txt 文件并上传
 
 ```
@@ -216,8 +263,7 @@ Hello World
 Hello Tom
 Hello Jack
 Hello Hadoop
-Bye   hadoop1234567
-1234567
+Bye   hadoop
 ```
 
 将words.txt上传到hdfs的根目录
@@ -228,13 +274,13 @@ bin/hadoop fs -put words.txt /
 
 可以通过浏览器访问：<http://192.168.2.100:50070/>
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519132722448)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519132722448)
 
 这里的words.txt就是我们上传的words.txt
 
 ## **配置启动YARN**
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519125030714)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519125030714)
 
 从上图看看出我们的MapReduce是运行在YARN上的，而YARN是运行在HDFS之上的，我们已经安装了HDFS现在来配置启动YARN，然后运行一个WordCount程序。
 
@@ -279,11 +325,13 @@ mv  mapred-site.xml.template mapred-site.xml
 
 如下：
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519130144945)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519130144945)
 
-测试用浏览器访问：（如果没响应，则开发8088端口）
+测试用浏览器访问8088：（如果没响应，则在防火墙白名单加入8088端口）
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160526221123767)
+
+
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160526221123767)
 
 停止
 
@@ -303,11 +351,11 @@ sbin/stop-yarn.sh
 
 用hadoop执行一个叫 hadoop-mapreduce-examples.jar 的 wordcount 方法，其中输入参数为 hdfs上根目录的words.txt 文件，而输出路径为 hdfs跟目录下的out目录，运行过程如下：
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519134620458)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519134620458)
 
 我们通过浏览器访问和下载查看结果：
 
-![这里写图片描述](file:///D:/OneDrive/aa开发资料2017.06.06/hadoop资料/Hadoop2.7.2之集群搭建（单机）%20-%20_阿坤的博客%20-%20博客频道%20-%20CSDN.NET_files/20160519135623866)
+![è¿éåå¾çæè¿°](https://img-blog.csdn.net/20160519135623866)
 
 这里下载的时候会跳转到另一个地址如下：
 
@@ -327,7 +375,7 @@ Hadoop  2
 Hello   4
 Jack    1
 Tom 1
-World   1123456
+World   1
 ```
 
 说明我们已经计算出了，单词出现的次数。
